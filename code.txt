@@ -1,43 +1,61 @@
+// header file for arduino : The LiquidCrystal library allows you to control LCD displays 
 #include <LiquidCrystal.h>
+// defining pins for lcd screen
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
+// defining variables for different purposes
 int val;
-float TEMP;
-int motorPin = 6;
-int speed = 0;
+float TEMP; // temperature
+int motorPin = 6; // arduino pin of the motor
+int speed = 0;  // speed of the motor
+
+// two types of functions are there in arduino :
+// setup() function : The Arduino program calls the setup function as the first thing when the Arduino unit powers up. So any code that you place in the setup function in your sketch runs first, and it only runs one time. The setup function is a great place to initialize input and output pins so they are ready to be used.
 
 void setup() {
+  // define that the display screen of lcd is 16 X 2 i.e. 16 pins and 2 rows.
   lcd.begin(16, 2);
-  pinMode(motorPin,OUTPUT);
+  // pinmode : Configures the specified pin to behave either as an input or an output. here motorpin i.e. assigned 6 value is assigned to behave as output.
+  pinMode(motorPin,OUTPUT); // pinMode takes two arguments (pin, mode)
   
-  analogWrite(motorPin,speed);
-  lcd.clear();
-  speed = 0;
+// analogWrite : The analogWrite Arduino command is used to update the status of analog pins. Here it is being used to set the speed of the motor.
+  analogWrite(motorPin,speed); // here analogWrite accepts two arguments (pin, value of duty cycle). Another argument, frequency is optional (500 Hz by default).
+  lcd.clear(); // used to clear the lcd screen.
+  speed = 0; // setting speed to 0
   analogWrite(motorPin,speed); 
-  delay(1000);
-  lcd.setCursor(0,0);
-  lcd.print("MICRO CONTROLLER");
-  lcd.setCursor(0,1);
-  lcd.print("BASED AUTOMATIC");
-  delay(3000);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("FAN SPEED");
-  lcd.setCursor(0,1);	
-  lcd.print("CONTROLLER");
-  delay(3000);
-  lcd.clear();
+  delay(1000); // delay() function allows you to pause the execution of your Arduino program for a specified period. It accept argument in milliseconds.
+  lcd.setCursor(0,0); // cursor of the lcd screen is set at x = 0 ; y = 0
+  lcd.print("MICRO CONTROLLER"); // lcd screen displays MICRO CONTROLLER
+  lcd.setCursor(0,1); // the cursor is set at x = 0 ; y = 1
+  lcd.print("BASED AUTOMATIC"); // lcd screen displays BASED AUTOMATIC
+  delay(3000); // delay of 3 seconds
+  lcd.clear(); // display screen clears
+  lcd.setCursor(0,0); // display cursor set at x = 0 ; y = 0
+  lcd.print("FAN SPEED"); // screen displays FAN SPEED
+  lcd.setCursor(0,1);	 // cursor set at x = 0 ; y = 1
+  lcd.print("CONTROLLER"); // display screen shows CONTROLLER
+  delay(3000); // delay of 3 seconds.
+  lcd.clear(); // screen clears
+
+  // move to loop() function
   
 }
 
+
+// loop() function : After setup function, the program moves to the loop function code. The program calls the code inside the loop function repeatedly until the Arduino board is powered off. Most of the time, we place the main code inside the loop function section. 
 void loop() {
-  val = analogRead(0);
-  float TmV = (val/1024.0)*5000;
-  float TEMP = TmV/10;
-  lcd.setCursor(0,0);lcd.print("Temperature:");
-  lcd.setCursor(0,1);lcd.print(TEMP);
-  delay(1000);
+  // The analogRead() function reads the value from the specified analog pin present on the particular Arduino board
+  val = analogRead(0); // val set to the value of analog pin 0 of arduino. Here it is used to read the analog value of the temperature read by LM - 35 sensor.
+  float TmV = (val/1024.0)*5000; // conversion of analog to digital
+  float TEMP = TmV/10; // conversion of analog to digital. 
+  // the above formula to convert analog value of LM-35 sensor reading to digital temperature value was taken from internet, I don't understand how it happens.
+  lcd.setCursor(0,0); // display cursor set to x = 0; y = 0
+  lcd.print("Temperature:"); // you understand this by now
+  lcd.setCursor(0,1);
+  lcd.print(TEMP); // displays the value of temperature
+  delay(1000); 
   
+  // below are the if else conditions according to different temperature readings which we set on L-35 sensor, the motor speed is set likely.
   if(TEMP > 20 && TEMP < 30){
     speed = 80;
     analogWrite(motorPin,speed);
